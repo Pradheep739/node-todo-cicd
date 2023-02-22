@@ -5,7 +5,7 @@ pipeline{
         stage("code"){
             steps{
                 echo "Cloning gitHub repo"
-                git url: "https://github.com/Pradheep739/node-todo-cicd.git",branch:'main'
+                git url: "https://github.com/Pradheep739/node-todo-cicd.git",branch:'master'
             } 
         }
         stage("build"){
@@ -22,7 +22,7 @@ pipeline{
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPass' , usernameVariable: 'dockerHubUser')]) {
                  sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                 sh "docker push sayalishewale/node-app:latest"
+                 sh "docker push pradheepaws739/node-app:latest"
                 }
             }   
                 
