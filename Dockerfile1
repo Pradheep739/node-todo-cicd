@@ -1,0 +1,35 @@
+# Stage 1: Build stage
+FROM node:12.2.0-alpine AS build-stage
+WORKDIR /app
+COPY package.json .
+RUN npm install --production
+COPY . .
+RUN npm run build \
+    && if [ ! -d "dist" ]; then echo "Build failed"; exit 1; fi
+
+# Stage 2: Production stage
+FROM node:12.2.0-alpine AS production-stage
+WORKDIR /app
+COPY --from=build-stage /app/package.json .
+COPY --from=build-stage /app/dist ./dist
+RUN npm install --production
+EXPOSE 8000
+CMD ["node", "dist/app.js"]
+-----------------------------------------------------------------------
+(80.5 mb)
+file2
+
+# Build stage
+FROM node:12.2.0-alpine AS build-stage
+WORKDIR /app
+COPY package.json .
+RUN npm install --production                                           
+COPY . .
+
+# Production stage
+FROM node:12.2.0-alpine AS production-stage
+WORKDIR /app
+COPY --from=build-stage /app .
+EXPOSE 8000
+CMD ["node", "app.js"]
+                       
